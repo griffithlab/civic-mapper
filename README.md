@@ -1,2 +1,2 @@
 # civic-mapper
-Tool to map variants to CIViC entries
+Python tool to map variants to CIViC entries
