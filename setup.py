@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 setup(name = 'civic_mapper',
 	version = '0.0.1',
 	description = 'Python tool to map variants to CIViC variant interpretations',

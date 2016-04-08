@@ -1,0 +1,14 @@
+language: python
+python:
+	- "3.5"
+
+script:
+	- pip install .
+
+os:
+	- linux
+
+notifications:
+	email:
+		on_failure: always
+		on_success: change
