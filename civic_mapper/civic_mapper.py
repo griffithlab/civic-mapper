@@ -25,6 +25,9 @@ if args.transvar != None:
 # Variants with coordinates are organized as such; dictionary = {chromosome number: [list of variants in that chromosome]}
 # Variants witout coordinates are organized as such; dictionary = {gene name: [list of variants in that gene]}
 ##################################################
+
+
+
 def coordinate_sorter(start, stop, ascending_list):
 	"""Maintains an ascending list by properly placing the next object in order when given the start and stop coordinates of the current object and list desired to be maintained.
 		Note: The function works best starting with an empty list, or a list with a single entry, or an already organized ascending list
@@ -55,6 +58,8 @@ def coordinate_sorter(start, stop, ascending_list):
 				#print('4th IF')
 				return current_index+1
 
+
+
 # The civic_variants_with_coordinates_dictionary will hold all variants based on chromosome location (dictionary key) and exist within a list
 civic_variants_with_coordinates_dictionary = {'X':[], 'Y':[]}
 for chromosome_number in range(1,23):
@@ -82,7 +87,8 @@ for current_variant in range(0, len(variants)):
 		raw_civic_variants_with_coordinates_list.append(variants[current_variant])
 ####################
 
-# Sorting all variants by stop coordinate in ascending order (least to greatest) 
+# Sorting all variants by stop coordinate in ascending order (least to greatest)
+####################
 raw_civic_variants_with_coordinates_list = sorted(raw_civic_variants_with_coordinates_list, key = lambda k: int(k['coordinates']['stop']))
 for var in raw_civic_variants_with_coordinates_list:
 	start = int(var['coordinates']['start'])
@@ -92,7 +98,7 @@ for var in raw_civic_variants_with_coordinates_list:
 	index_location = coordinate_sorter(start, stop, civic_variants_with_coordinates_dictionary[chr_key])
 	# Inserting variants into civic_variants_with_coordinates_dictionary based on the index_location to maintain a sorted list
 	civic_variants_with_coordinates_dictionary[chr_key].insert(index_location, var)
-
+####################
 
 for line in transvar_output:
 
@@ -153,22 +159,22 @@ for line in transvar_output:
 
 		var_rep_trans = line_list[1]
 
-		#########################input_genome_build = 
-
+		# Implement genome build filtering once build 38 cooridnates are added to CIViC
+		#genome_build = 37 OR 38
+		
+		exact_match = ''
 		passed_exact_match = False
+
+		soft_match = ''
+		soft_matchs = []
 		passed_soft_match = False
+		
+		nested_match = ''
+		nested_matchs = []
 		passed_nested_match = False
 
 		print_header_statement = False
 		print_input_statement = False
-
-		exact_match = ''
-
-		soft_match = ''
-		soft_matchs = []
-
-		nested_match = ''
-		nested_matchs = []
 
 		for current_variant_in_dict in civic_variants_with_coordinates_dictionary[var_chr]:
 			
@@ -181,27 +187,24 @@ for line in transvar_output:
 			civic_rep_trans = current_variant_in_dict['coordinates']['representative_transcript'].split('.')[0]
 			
 			if var_rep_trans == civic_rep_trans and var_gene_name == civic_gene_name:
-
 				## EXACT MATCH ##
 				if int(variant_start) == civic_start and int(variant_stop) == civic_stop and var_ref_base == civic_ref_base and var_var_base == civic_var_base:
 					passed_exact_match = True
 					print_input_statement = True
 					exact_match = current_variant_in_dict['entrez_name'] + ':' + current_variant_in_dict['name']
-
-				## SOFT MATCH ##
+				## SOFT MATCHS ##
 				elif (passed_exact_match == False and passed_soft_match == False and var_var_short_name == civic_var_name and var_ref_base != civic_ref_base) or (passed_exact_match == False and passed_soft_match == False and var_ref_base != civic_ref_base and int(variant_start) in range(civic_start, civic_stop+1) and int(variant_stop) in range(civic_start, civic_stop+1)) :
 					passed_soft_match = True
 					print_input_statement = True
 					soft_match = current_variant_in_dict['entrez_name'] + ':' + current_variant_in_dict['name']
 					soft_matchs.append(soft_match)
-
+				## NESTED MATCHS ##
 				elif (passed_exact_match == True or passed_soft_match == True) and var_var_name != civic_var_name and var_ref_base != civic_ref_base and int(variant_start) in range(civic_start, civic_stop+1) and int(variant_stop) in range( civic_start, civic_stop+1):
 					passed_nested_match = True
-					print_header_statement = True
 					nested_match = current_variant_in_dict['entrez_name'] + ':' + current_variant_in_dict['name']
 					nested_matchs.append(nested_match)
 
-
+		# Printing mapping results to Stander Output
 		if print_input_statement == True:
 			if var_var_name == None:
 				print('\nVariant input information: ' + var_input + '\tAnnotated as: ' + var_gene_name + ':None')
