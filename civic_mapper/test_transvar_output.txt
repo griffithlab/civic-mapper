@@ -22,7 +22,6 @@ chr12:g.25398284C>G	ENST00000311936 (protein_coding)	KRAS	-	chr12:g.25398284C>G/
 chr12:g.25398284C>G	ENST00000557334 (protein_coding)	KRAS	-	chr12:g.25398284C>G/c.35G>C/p.G12A	cds_in_exon_2	dbsnp=rs121913529(chr12:25398284C>G);missense;codon_pos=25398283-25398284-25398285;ref_codon_seq=GGT;aliases=ENSP00000452512;source=Ensembl
 chr12:g.25398284C>G	ENST00000256078 (protein_coding)	KRAS	-	chr12:g.25398284C>G/c.35G>C/p.G12A	cds_in_exon_2	dbsnp=rs121913529(chr12:25398284C>G);missense;codon_pos=25398283-25398284-25398285;ref_codon_seq=GGT;aliases=ENSP00000256078;source=Ensembl
 chr12:g.25398284C>G	ENST00000556131 (protein_coding)	KRAS	-	chr12:g.25398284C>G/c.35G>C/p.G12A	cds_in_exon_2	dbsnp=rs121913529(chr12:25398284C>G);missense;codon_pos=25398283-25398284-25398285;ref_codon_seq=GGT;aliases=ENSP00000451856;source=Ensembl
-input
 chr7:g.87160618A>C	ENST00000265724 (protein_coding)	ABCB1	-	chr7:g.87160618A>C/c.2677T>G/p.S893A	cds_in_exon_22	dbsnp=rs2032582(chr7:87160618A>C);missense;codon_pos=87160616-87160617-87160618;ref_codon_seq=TCT;aliases=ENSP00000265724;source=Ensembl
 chr7:g.87160618A>C	ENST00000488737 (processed_transcript)	ABCB1	-	chr7:g.87160618A>C/c.319T>G/.	noncoding_exon_2	dbsnp=rs2032582(chr7:87160618A>C);source=Ensembl
 chr7:g.87160618A>C	ENST00000543898 (protein_coding)	ABCB1	-	chr7:g.87160618A>C/c.2485T>G/p.S829A	cds_in_exon_19	dbsnp=rs2032582(chr7:87160618A>C);missense;codon_pos=87160616-87160617-87160618;ref_codon_seq=TCT;aliases=ENSP00000444095;source=Ensembl
