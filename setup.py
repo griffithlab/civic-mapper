@@ -13,6 +13,7 @@ setup(name = 'civic_mapper',
 	classifiers = [
 		'License :: OSI Approved :: MIT License',
 		'Programming Language :: Python :: 3.5',
+
 	],
 	keywords = 'civic mapper',
 	url = 'http://github.com/griffithlab/civic-mapper',

@@ -60,3 +60,9 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#Mac system file
+.DS_Store
+
+#Virtualenv dir
+myenv
