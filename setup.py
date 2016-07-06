@@ -6,13 +6,14 @@ setup(name = 'civic_mapper',
 	install_requires = [
 		'requests',
 		'flask',
+		'transvar',
 	],
 	entry_points = {
 		'console_scripts': ['civic-mapper = civic_mapper.command_line:main']
 	},
 	classifiers = [
 		'License :: OSI Approved :: MIT License',
-		'Programming Language :: Python :: 3.5',
+		'Programming Language :: Python :: 2.7',
 
 	],
 	keywords = 'civic mapper',
