@@ -1,10 +1,9 @@
+"""This code queries the CIViC API for all evidence items,
+filters out duplicated pubmed IDs, and returns counts of all
+parameters listed along with pie chart summaries in pdf format"""
 
 import argparse, json, requests, subprocess, transvar
 import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
-import numpy as np
-requests.packages.urllib3.disable_warnings()
-
 
 count = 0
 
@@ -40,8 +39,6 @@ trust_rating_3 = 0
 trust_rating_4 = 0
 trust_rating_5 = 0
 
-repeats = {}
-
 publications = {}
 unique_journals = {}
 unique_drugs = {}
@@ -49,9 +46,7 @@ unique_disease = {}
 
 evidence_items = requests.get('https://civic.genome.wustl.edu/api/evidence_items?count=10000000').json()['records']
 
-raw_count = len(evidence_items)
 for current_evidence in range(0, len(evidence_items)):
-
 	if evidence_items[current_evidence]["pubmed_id"] not in publications:
 		publications[evidence_items[current_evidence]["pubmed_id"]] = evidence_items[current_evidence]
 		count += 1
@@ -84,7 +79,6 @@ for key,value in publications.items():
 		for index in range(0, len(value['drugs'])):
 			if value['drugs'][index]['id'] not in unique_drugs:
 				unique_drugs[value['drugs'][index]['id']] = 1
-				#print(value['drugs'][index]['id'])
 				drugs += 1
 
 		if value['clinical_significance'] == 'Sensitivity':
@@ -119,7 +113,6 @@ for key,value in publications.items():
 		
 		if value['disease']['doid'] not in unique_disease:
 			unique_disease[value['disease']['doid']] = 1
-			#print(value['disease']['doid'])
 			disease += 1
 
 		if value['rating'] == 1:
@@ -151,7 +144,6 @@ plt.axis('equal')
 plt.title('Total Publications (' + str(count) + ')')
 fig.savefig('CIViC_publications.pdf', format = 'pdf')
 
-
 print('All stats from now on only take into account unique accepted or submitted journals with evidence items')
 print('\nEvidence Type Total: ' + str(prognostic+diagnostic+predictive))
 print('\tPrognostic: ' + str(prognostic))
@@ -162,7 +154,6 @@ plt.pie([prognostic, diagnostic, predictive], labels = ['Prognostic', 'Diagnosti
 plt.axis('equal')
 plt.title('Total Evidence Type (' + str(prognostic+diagnostic+predictive) + ')')
 fig.savefig('CIViC_evidence_type.pdf', format = 'pdf')
-
 
 print('\nClinical Significance Total:' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a))
 print('\tSensitivity: ' + str(sensitivity))
@@ -179,7 +170,6 @@ plt.axis('equal')
 plt.title('Total Clinical Significance (' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a) + ')')
 fig.savefig('CIViC_clinical_significance.pdf', format = 'pdf')
 
-
 print('\nEvidence direction Total: ' + str(supports+does_not_support))
 print('\tSupports: ' + str(supports))
 print('\tDoes Not Support: ' + str(does_not_support))
@@ -188,7 +178,6 @@ plt.pie([supports, does_not_support], labels = ['Supports', 'Does Not Support'],
 plt.axis('equal')
 plt.title('Total Evidence Direction (' + str(supports+does_not_support) + ')')
 fig.savefig('CIViC_evidence_direction.pdf', format = 'pdf')
-
 
 print('\nTrust Ratings Total: ' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5))
 print('\tTrust 1: ' + str(trust_rating_1))
@@ -201,18 +190,3 @@ plt.pie([trust_rating_1, trust_rating_2, trust_rating_3, trust_rating_4, trust_r
 plt.axis('equal')
 plt.title('Total Trust Ratings (' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5) + ')')
 fig.savefig('CIViC_trust_ratings.pdf', format = 'pdf')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
