@@ -1,6 +1,7 @@
 
 import argparse, json, requests, subprocess, transvar
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 import numpy as np
 requests.packages.urllib3.disable_warnings()
 
@@ -51,38 +52,19 @@ evidence_items = requests.get('https://civic.genome.wustl.edu/api/evidence_items
 raw_count = len(evidence_items)
 for current_evidence in range(0, len(evidence_items)):
 
-	# if evidence_items[current_evidence]["pubmed_id"] not in repeats and (evidence_items[current_evidence]["status"] == 'accepted' or evidence_items[current_evidence]["status"] == 'submitted'):
-	# 	repeats[evidence_items[current_evidence]["pubmed_id"]] = [evidence_items[current_evidence]]
-	# else:
-	# 	repeats[evidence_items[current_evidence]["pubmed_id"]].append(evidence_items[current_evidence])
-
-
 	if evidence_items[current_evidence]["pubmed_id"] not in publications:
 		publications[evidence_items[current_evidence]["pubmed_id"]] = evidence_items[current_evidence]
 		count += 1
 
 
-# for key,value in repeats.items():
-# 	status_list = []
-# 	if len(value) > 1:
-# 		print(key)
-	# 	status_list.append(value[index]['status'])
-	# if 'rejected' in status_list and 'accepted' in status_list:
-	# 	print('\n\n' + value)
-
-
-
 for key,value in publications.items():
 	if value['status'] == 'rejected':
-		#print('\n\n' + str(value))
 		rejected += 1
 
 	elif value['status'] == 'accepted':
-		#print('\n\n' + str(value))
 		accepted += 1
 
 	elif value['status'] == 'submitted':
-		#print(value['status'])
 		submitted += 1
 
 	if value['status'] != 'rejected':
@@ -155,94 +137,82 @@ for key,value in publications.items():
 		if value['rating'] == 5:
 			trust_rating_5 += 1
 
+print('Unique Journals: ' + str(nonreject_art))
+print('Diseases: ' + str(disease))
+print('Unique Drugs: ' + str(drugs) + '\n')
 
-#print('Raw evidence item count: ' + str(raw_count))
 print('Unique pubmed IDs: ' + str(count))
 print('\tAccepted: ' + str(accepted))
 print('\tRejected: ' + str(rejected))
-print('\tSubmitted: ' + str(submitted))
-#print('\tTOTAL: ' + str(accepted+submitted))
+print('\tSubmitted: ' + str(submitted) + '\n')
 fig = plt.figure()
 plt.pie([accepted, rejected, submitted], labels = ['Accepted', 'Rejected', 'Submitted'], colors = ['red', 'gold', 'lightskyblue'], autopct='%1.1f%%', pctdistance = 0.65)
 plt.axis('equal')
-#plt.bar(left = [1,2,3] , height = [accepted, rejected, submitted], width = 0.8, align='center', tick_label = ['Accepted', 'Rejected', 'Submitted'])
 plt.title('Total Publications (' + str(count) + ')')
-fig.savefig('CIViC_publications.png')
-
-# fig = plt.figure()
-# plt.bar(left = [1,2,3], height = [accepted, rejected, submitted], align = 'center', color = ['red', 'gold', 'lightskyblue'], )
-# plt.xticks([1,2,3], ('Accepted', 'Rejected', 'Submitted'))
-# plt.title('Total Publications (' + str(count) + ')')
-# fig.savefig('bar_CIViC_publications.png')
+fig.savefig('CIViC_publications.pdf', format = 'pdf')
 
 
 print('All stats from now on only take into account unique accepted or submitted journals with evidence items')
-print('Unique Journals: ' + str(nonreject_art))
+print('\nEvidence Type Total: ' + str(prognostic+diagnostic+predictive))
 print('\tPrognostic: ' + str(prognostic))
 print('\tDiagnostic: ' + str(diagnostic))
 print('\tPredictive: ' + str(predictive))
-#print('\tTOTAL: ' + str(prognostic+diagnostic+predictive))
 fig = plt.figure()
 plt.pie([prognostic, diagnostic, predictive], labels = ['Prognostic', 'Diagnostic', 'Predictive'], colors = ['red', 'gold', 'lightskyblue'], autopct='%1.1f%%', startangle = 90)
 plt.axis('equal')
-plt.title('Total Evidence Type (' + str(nonreject_art) + ')')
-fig.savefig('CIViC_evidence_type.png')
+plt.title('Total Evidence Type (' + str(prognostic+diagnostic+predictive) + ')')
+fig.savefig('CIViC_evidence_type.pdf', format = 'pdf')
 
 
-print('\tClinical Significance:')
-print('\t\tSensitivity: ' + str(sensitivity))
-print('\t\tResistance or Non-Response: ' + str(resistance_non_response))
-print('\t\tBetter Outcome: ' + str(better_outcome))
-print('\t\tPoor Outcome: ' + str(poor_outcome))
-print('\t\tPositive: ' + str(positive))
-print('\t\tNegative: ' + str(negative))
-print('\t\tAdverse Response: ' + str(adverse_response))
-print('\t\tN/A: ' + str(n_a))
-#print('\t\tTOTAL: ' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a))
+print('\nClinical Significance Total:' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a))
+print('\tSensitivity: ' + str(sensitivity))
+print('\tResistance or Non-Response: ' + str(resistance_non_response))
+print('\tBetter Outcome: ' + str(better_outcome))
+print('\tPoor Outcome: ' + str(poor_outcome))
+print('\tPositive: ' + str(positive))
+print('\tNegative: ' + str(negative))
+print('\tAdverse Response: ' + str(adverse_response))
+print('\tN/A: ' + str(n_a))
 fig = plt.figure()
 plt.pie([sensitivity, adverse_response, positive, resistance_non_response, negative, better_outcome, poor_outcome, n_a], labels = ['Sensitivity', 'Adverse Response', 'Positive', 'Resistance or Non-Response', 'Negative', 'Better Outcome', 'Poor Outcome', 'N/A'], autopct = '%1.1f%%', pctdistance=0.9, labeldistance=1.1, startangle = 40, colors = ['lightskyblue', 'white', 'yellowgreen', 'lightcyan', 'gold', 'green', 'lightcoral', 'red'])
 plt.axis('equal')
 plt.title('Total Clinical Significance (' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a) + ')')
-fig.savefig('CIViC_clinical_significance.png')
-
-# fig = plt.figure()
-# plt.bar(left = [1,2,3,4,5,6,7,8], height = [sensitivity, adverse_response, positive, resistance_non_response, negative, better_outcome, poor_outcome, n_a], align = 'center')
-# plt.xticks([1,2,3,4,5,6,7,8], ('Sensitivity', 'Adverse Response', 'Positive', 'Resistance or Non-Response', 'Negative', 'Better Outcome', 'Poor Outcome', 'N/A'))
-# plt.title('Total Clinical Significance (' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a) + ')')
-# fig.savefig('bar_CIViC_clinical_significance.png')
+fig.savefig('CIViC_clinical_significance.pdf', format = 'pdf')
 
 
-print('\tEvidence direction:')
-print('\t\tSupports: ' + str(supports))
-print('\t\tDoes Not Support: ' + str(does_not_support))
-#print('\t\tTOTAL: ' + str(supports+does_not_support))
+print('\nEvidence direction Total: ' + str(supports+does_not_support))
+print('\tSupports: ' + str(supports))
+print('\tDoes Not Support: ' + str(does_not_support))
 fig = plt.figure()
 plt.pie([supports, does_not_support], labels = ['Supports', 'Does Not Support'], colors = ['gold', 'lightskyblue'], autopct='%1.1f%%', startangle = 180)
 plt.axis('equal')
 plt.title('Total Evidence Direction (' + str(supports+does_not_support) + ')')
-fig.savefig('CIViC_evidence_direction.png')
+fig.savefig('CIViC_evidence_direction.pdf', format = 'pdf')
 
 
-print('\tTrust Ratings:')
-print('\t\tTrust 1: ' + str(trust_rating_1))
-print('\t\tTrust 2: ' + str(trust_rating_2))
-print('\t\tTrust 3: ' + str(trust_rating_3))
-print('\t\tTrust 4: ' + str(trust_rating_4))
-print('\t\tTrust 5: ' + str(trust_rating_5))
-#print('\t\tTOTAL: ' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5))
+print('\nTrust Ratings Total: ' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5))
+print('\tTrust 1: ' + str(trust_rating_1))
+print('\tTrust 2: ' + str(trust_rating_2))
+print('\tTrust 3: ' + str(trust_rating_3))
+print('\tTrust 4: ' + str(trust_rating_4))
+print('\tTrust 5: ' + str(trust_rating_5))
 fig = plt.figure()
 plt.pie([trust_rating_1, trust_rating_2, trust_rating_3, trust_rating_4, trust_rating_5], labels = ['1 Star', '2 Star', '3 Star', '4 Star', '5 Star'], autopct='%1.1f%%')
 plt.axis('equal')
 plt.title('Total Trust Ratings (' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5) + ')')
-fig.savefig('CIViC_trust_ratings.png')
+fig.savefig('CIViC_trust_ratings.pdf', format = 'pdf')
 
 
-print('\tUnique Drugs: ' + str(drugs))
-print('\tDiseases: ' + str(disease))
-# fig = plt.figure()
-# plt.bar(left = [1,2,3], height = [count, disease, drugs], align = 'center', color = ['red', 'gold', 'lightskyblue'], )
-# plt.xticks([1,2,3], ('Publication', 'Diseases', 'Drugs'))
-# plt.title('CIViC Statistics')
-# fig.savefig('CIViC_statistics.png')
+
+
+
+
+
+
+
+
+
+
+
 
 
