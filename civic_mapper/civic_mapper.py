@@ -18,7 +18,7 @@ args = parser.parse_args()
 path_to_file = args.vcf
 basename = os.path.basename(path_to_file)
 basename_no_extension = os.path.splitext(basename)[0]
-transvar_output_name = basename_no_extension + "_transvar_anno.vcf"
+transvar_output_name = basename_no_extension + "_transvar_ganno.vcf"
 
 # Saves the inputed VCF file as a readable variables
 if args.vcf != None:
