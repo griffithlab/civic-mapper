@@ -1,7 +1,9 @@
 """civic_mapper.py - Maps and reports variants found in CIViC using the CIViC API"""
 
-import argparse, json, requests, subprocess, transvar
+import argparse, json, requests, subprocess, os, transvar
 from flask import Flask, render_template
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 requests.packages.urllib3.disable_warnings()
 
 
@@ -13,12 +15,19 @@ parser.add_argument('-vcf', '--vcf', required = False, help = 'Reports variants 
 # Initializing args to parse through all arguments
 args = parser.parse_args()
 
+path_to_file = args.vcf
+basename = os.path.basename(path_to_file)
+basename_no_extension = os.path.splitext(basename)[0]
+transvar_output_name = basename_no_extension + "_transvar_anno.vcf"
+
 # Saves the inputed VCF file as a readable variables
 if args.vcf != None:
 	#vcf_output = open(args.vcf, 'r')
 	transvar_output = subprocess.check_output("transvar ganno --vcf " + args.vcf + " --ensembl --seqmax -1", shell = True)
 
-
+transvar_output_file = open(transvar_output_name, "w")
+transvar_output_file.write(transvar_output)
+transvar_output_file.close()
 
 def coordinate_sorter(start, stop, ascending_list):
 	"""Maintains an ascending list by properly placing the next object in order when given the start and stop coordinates of the current object and list desired to be maintained.

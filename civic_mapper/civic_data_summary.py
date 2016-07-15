@@ -1,8 +1,8 @@
 """This code queries the CIViC API for all evidence items,
 filters out duplicated pubmed IDs, and returns counts of all
-parameters listed along with pie chart summaries in pdf format"""
+parameters listed along with pie chart summaries in svg format"""
 
-import argparse, json, requests, subprocess, transvar
+import argparse, json, requests, subprocess, transvar, matplotlib
 import matplotlib.pyplot as plt
 
 count = 0
@@ -130,6 +130,7 @@ for key,value in publications.items():
 		if value['rating'] == 5:
 			trust_rating_5 += 1
 
+
 print('Unique Journals: ' + str(nonreject_art))
 print('Diseases: ' + str(disease))
 print('Unique Drugs: ' + str(drugs) + '\n')
@@ -142,7 +143,7 @@ fig = plt.figure()
 plt.pie([accepted, rejected, submitted], labels = ['Accepted', 'Rejected', 'Submitted'], colors = ['red', 'gold', 'lightskyblue'], autopct='%1.1f%%', pctdistance = 0.65)
 plt.axis('equal')
 plt.title('Total Publications (' + str(count) + ')')
-fig.savefig('CIViC_publications.pdf', format = 'pdf')
+fig.savefig('CIViC_publications.svg', format = 'svg')
 
 print('All stats from now on only take into account unique accepted or submitted journals with evidence items')
 print('\nEvidence Type Total: ' + str(prognostic+diagnostic+predictive))
@@ -153,7 +154,7 @@ fig = plt.figure()
 plt.pie([prognostic, diagnostic, predictive], labels = ['Prognostic', 'Diagnostic', 'Predictive'], colors = ['red', 'gold', 'lightskyblue'], autopct='%1.1f%%', startangle = 90)
 plt.axis('equal')
 plt.title('Total Evidence Type (' + str(prognostic+diagnostic+predictive) + ')')
-fig.savefig('CIViC_evidence_type.pdf', format = 'pdf')
+fig.savefig('CIViC_evidence_type.svg', format = 'svg')
 
 print('\nClinical Significance Total:' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a))
 print('\tSensitivity: ' + str(sensitivity))
@@ -165,10 +166,10 @@ print('\tNegative: ' + str(negative))
 print('\tAdverse Response: ' + str(adverse_response))
 print('\tN/A: ' + str(n_a))
 fig = plt.figure()
-plt.pie([sensitivity, adverse_response, positive, resistance_non_response, negative, better_outcome, poor_outcome, n_a], labels = ['Sensitivity', 'Adverse Response', 'Positive', 'Resistance or Non-Response', 'Negative', 'Better Outcome', 'Poor Outcome', 'N/A'], autopct = '%1.1f%%', pctdistance=0.9, labeldistance=1.1, startangle = 40, colors = ['lightskyblue', 'white', 'yellowgreen', 'lightcyan', 'gold', 'green', 'lightcoral', 'red'])
+plt.pie([sensitivity, adverse_response, resistance_non_response, negative, positive, better_outcome, poor_outcome, n_a], labels = ['Sensitivity', 'Adverse Response', 'Resistance or Non-Response', 'Negative', 'Positive', 'Better Outcome', 'Poor Outcome', 'N/A'], autopct = '%1.1f%%', pctdistance=0.9, labeldistance=1.1, startangle = 40, colors = ['lightskyblue', 'purple', 'lightcyan', 'gold', 'yellow', 'yellowgreen', 'green', 'red'])
 plt.axis('equal')
 plt.title('Total Clinical Significance (' + str(sensitivity+resistance_non_response+better_outcome+poor_outcome+positive+negative+adverse_response+n_a) + ')')
-fig.savefig('CIViC_clinical_significance.pdf', format = 'pdf')
+fig.savefig('CIViC_clinical_significance.svg', format = 'svg')
 
 print('\nEvidence direction Total: ' + str(supports+does_not_support))
 print('\tSupports: ' + str(supports))
@@ -177,7 +178,7 @@ fig = plt.figure()
 plt.pie([supports, does_not_support], labels = ['Supports', 'Does Not Support'], colors = ['gold', 'lightskyblue'], autopct='%1.1f%%', startangle = 180)
 plt.axis('equal')
 plt.title('Total Evidence Direction (' + str(supports+does_not_support) + ')')
-fig.savefig('CIViC_evidence_direction.pdf', format = 'pdf')
+fig.savefig('CIViC_evidence_direction.svg', format = 'svg')
 
 print('\nTrust Ratings Total: ' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5))
 print('\tTrust 1: ' + str(trust_rating_1))
@@ -189,4 +190,4 @@ fig = plt.figure()
 plt.pie([trust_rating_1, trust_rating_2, trust_rating_3, trust_rating_4, trust_rating_5], labels = ['1 Star', '2 Star', '3 Star', '4 Star', '5 Star'], autopct='%1.1f%%')
 plt.axis('equal')
 plt.title('Total Trust Ratings (' + str(trust_rating_1+trust_rating_2+trust_rating_3+trust_rating_4+trust_rating_5) + ')')
-fig.savefig('CIViC_trust_ratings.pdf', format = 'pdf')
+fig.savefig('CIViC_trust_ratings.svg', format = 'svg')
